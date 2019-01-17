@@ -84,10 +84,10 @@ function square() {
 function quad(a, b, c, d) {
 	// Only 4 vertices in a square
     var vertices = [
-        vec4( -0.5, -0.5,  0.5, 1.0 ),
-        vec4( -0.5,  0.5,  0.5, 1.0 ),
-        vec4(  0.5,  0.5,  0.5, 1.0 ),
-        vec4(  0.5, -0.5,  0.5, 1.0 ),
+        vec4( -0.5, -0.5,  0.0, 1.0 ),
+        vec4( -0.5,  0.5,  0.0, 1.0 ),
+        vec4(  0.5,  0.5,  0.0, 1.0 ),
+        vec4(  0.5, -0.5,  0.0, 1.0 ),
     ];
 
     var vertexColors = [
