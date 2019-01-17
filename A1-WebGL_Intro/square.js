@@ -4,7 +4,7 @@
 var canvas;
 var gl;
 
-var NumVertices  = 6; //One face instead of six
+var NumVertices = 6; //One face instead of six
 
 var points = [];
 var colors = [];
@@ -37,9 +37,7 @@ window.onload = function init()
     // visibility
     gl.enable(gl.DEPTH_TEST);
 
-    //
     //  Load shaders and initialize attribute buffers
-    //
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
@@ -55,12 +53,13 @@ window.onload = function init()
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
     
-
     var vPosition = gl.getAttribLocation( program, "vPosition" );
     gl.vertexAttribPointer( vPosition, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( vPosition );
-
-    thetaLoc = gl.getUniformLocation(program, "theta"); 
+    
+    // link to shader
+    thetaLoc = gl.getUniformLocation(program, "theta");
+    posLoc = gl.getUniformLocation(program, "pos");
     
     //event listeners for buttons
     document.getElementById( "xButton" ).onclick = function () {
@@ -121,8 +120,9 @@ function render()
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // for animation 
-    if(flag) theta[axis] += 2.0;
+    if(flag) theta[axis] += 2.0; //rotation speed
     gl.uniform3fv(thetaLoc, theta);
+    //gl.uniform3fv(posLoc, pos);
     // initiate vertex shader
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
     // needed for redrawing 
