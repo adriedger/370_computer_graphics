@@ -39,8 +39,8 @@ void main()
 					0.0,  0.0, 0.0, 1.0 );
 
     fColor = vColor;
-    gl_Position = rz * ry * rx * vPosition;
-    //gl_Position = rz * ry * rx * vPosition + pos;
+    //gl_Position = rz * ry * rx * vPosition;
+    gl_Position = rz * ry * rx * vPosition + pos;
 } 
 </script>
 
@@ -69,6 +69,7 @@ Oops ... your browser doesn't support the HTML5 canvas element
 <button id= "yButton">Rotate Y</button>
 <button id= "zButton">Rotate Z</button>
 <button id = "ButtonT">Toggle Rotation</button>
+<button id = "Move">Translate</button>
 
 </body>
 </html>

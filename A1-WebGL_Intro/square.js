@@ -9,19 +9,17 @@ var NumVertices = 6; //One face instead of six
 var points = [];
 var colors = [];
 
-var xAxis = 0;
-var yAxis = 1;
-var zAxis = 2;
-
 var axis = 0;
 var theta = [ 0, 0, 0 ];
+var pos = 0; //for transaltions
 
 var thetaLoc;
+var posLoc;
 
 var flag = true;
 
-window.onload = function init()
-{
+window.onload = function init(){
+    
     // setup canvas
     canvas = document.getElementById( "gl-canvas" );
     gl = WebGLUtils.setupWebGL( canvas );
@@ -63,16 +61,18 @@ window.onload = function init()
     
     //event listeners for buttons
     document.getElementById( "xButton" ).onclick = function () {
-        axis = xAxis;
+        axis = 0;
     };
     document.getElementById( "yButton" ).onclick = function () {
-        axis = yAxis;
+        axis = 1;
     };
     document.getElementById( "zButton" ).onclick = function () {
-        axis = zAxis;
+        axis = 2;
     };
     document.getElementById("ButtonT").onclick = function(){flag = !flag;};
-        
+    document.getElementById("Move").onclick = function() {
+        pos += 2;
+    };
     render();
 }
 
@@ -120,9 +120,9 @@ function render()
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // for animation 
-    if(flag) theta[axis] += 2.0; //rotation speed
+    if(flag) theta[axis] += 2.0; //rotation speed, button processor
     gl.uniform3fv(thetaLoc, theta);
-    //gl.uniform3fv(posLoc, pos);
+    gl.uniform4fv(posLoc, pos);
     // initiate vertex shader
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
     // needed for redrawing 
