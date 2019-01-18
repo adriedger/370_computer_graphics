@@ -11,7 +11,7 @@ var colors = [];
 
 var axis = 0;
 var theta = [ 0, 0, 0 ];
-var pos = [0, 0, 0]; //x,y,z for translations
+var pos = [0, 0, 0, 0]; //vector to add for translations
 
 var thetaLoc;
 var posLoc;
@@ -71,7 +71,7 @@ window.onload = function init(){
     };
     document.getElementById("ButtonT").onclick = function(){flag = !flag;};
     document.getElementById("Move").onclick = function() {
-        pos[0] += 1.0;//translate two pixels to right
+        pos[0] += 0.1;//translate to right
     };
     render();
 }
@@ -122,7 +122,7 @@ function render()
     // for animation 
     if(flag) theta[axis] += 2.0; //rotation speed, button processor
     gl.uniform3fv(thetaLoc, theta);
-    gl.uniform3fv(posLoc, pos);
+    gl.uniform4fv(posLoc, pos);
     // initiate vertex shader
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
     // needed for redrawing 
