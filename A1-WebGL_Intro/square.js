@@ -12,9 +12,11 @@ var colors = [];
 var axis = 0;
 var theta = [ 0, 0, 0 ];
 var pos = [0, 0, 0, 0]; //vector to add for translations
+var scale = 1.0;
 
 var thetaLoc;
 var posLoc;
+var scaleLoc;
 
 var flag = true;
 
@@ -58,6 +60,7 @@ window.onload = function init(){
     // link to shader
     thetaLoc = gl.getUniformLocation(program, "theta");
     posLoc = gl.getUniformLocation(program, "pos");
+    scaleLoc = gl.getUniformLocation(program, "scale");
     
     //event listeners for buttons
     document.getElementById( "xButton" ).onclick = function () {
@@ -73,6 +76,10 @@ window.onload = function init(){
     document.getElementById("Move").onclick = function() {
         pos[0] += 0.1;//translate to right
     };
+    document.getElementById("Scale").onclick = function() {
+        scale += 0.1;
+    };
+
     render();
 }
 
@@ -108,9 +115,7 @@ function quad(a, b, c, d) {
     for ( var i = 0; i < indices.length; ++i ) {
         points.push( vertices[indices[i]] );
         //colors.push( vertexColors[indices[i]] );
-    
         colors.push([1.0, 0.0, 0.0, 1.0]); // solid red
-        
     }
 }
 
@@ -123,6 +128,7 @@ function render()
     if(flag) theta[axis] += 2.0; //rotation speed, button processor
     gl.uniform3fv(thetaLoc, theta);
     gl.uniform4fv(posLoc, pos);
+    gl.uniform1f(scaleLoc, scale);
     // initiate vertex shader
     gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
     // needed for redrawing 
