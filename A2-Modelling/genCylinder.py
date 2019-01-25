@@ -3,7 +3,7 @@
 
 from math import *
 
-n = 6 #discretizations
+n = 12 #discretizations
 vertices = []
 
 def gen_vertices(side):
@@ -11,7 +11,7 @@ def gen_vertices(side):
         z = 2
     else:
         z = 0
-    vertices.append((0, 0, z))#centerpoint
+    vertices.append((0, 0, z)) #centerpoint
     dsc = (2*pi)/n 
     for i in range(0, n): #n divisions
         theta = dsc*i
@@ -22,19 +22,13 @@ gen_vertices("top")
 
 faces = []
 
-def gen_faces(side):
-    
-    s_a = 1
-    l_a = 1
-    s_b = 1+n+1
-    l_b = 2
-
+def gen_faces(side): #start/end points of each side are key delimiters
     if side == "bottom":
-        for i in range(s_a+1, s_a+n+1):
-            faces.append((s_a, i, ((i-l_a)%n)+s_a+1))
+        for i in range(2, 2+n):
+            faces.append((1, i, ((i-1)%n)+2))
     elif side =="top":
-        for i in range(s_b+1, s_b+n+1):
-            faces.append((s_b, i, ((i-l_b)%n)+s_b+1))
+        for i in range(3+n, 3+n+n):
+            faces.append((2+n, i, ((i-2)%n)+n+3))
     elif side == "sides":
         for i in range(2, 2+n):
             faces.append((i, i+n+1, ((i-1)%n)+n+3))
@@ -48,7 +42,7 @@ objFile = open("cylinder.obj", "w")
 for v in vertices:
     objFile.write("v ")
     for a in v:
-        objFile.write(format(a, ".2f") + " ")#output to a precision of 2
+        objFile.write(format(a, ".2f") + " ") #output to a precision of 2
     objFile.write("\n")
 for f in faces:
     objFile.write("f ")
