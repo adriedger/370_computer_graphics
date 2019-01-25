@@ -19,22 +19,30 @@ def gen_vertices(side):
 
 gen_vertices("bottom")
 gen_vertices("top")
-#print vertices
 
 faces = []
 
 def gen_faces(side):
-    if side == "bottom":
-        s = 1
-        l = 1
-    elif side =="top":
-        s = 1+n+1
-        l = 2
-    for i in range(s+1, s+n+1):
-        faces.append((s, i, ((i-l)%n)+s+1))
+    
+    s_a = 1
+    l_a = 1
+    s_b = 1+n+1
+    l_b = 2
 
+    if side == "bottom":
+        for i in range(s_a+1, s_a+n+1):
+            faces.append((s_a, i, ((i-l_a)%n)+s_a+1))
+    elif side =="top":
+        for i in range(s_b+1, s_b+n+1):
+            faces.append((s_b, i, ((i-l_b)%n)+s_b+1))
+    elif side == "sides":
+        for i in range(2, 2+n):
+            faces.append((i, i+n+1, ((i-1)%n)+n+3))
+            faces.append((i, ((i-1)%n)+n+3, ((i-1)%n)+2))
+ 
 gen_faces("bottom")
 gen_faces("top")
+gen_faces("sides")
 
 objFile = open("cylinder.obj", "w")
 for v in vertices:
