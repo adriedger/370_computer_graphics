@@ -7,6 +7,7 @@ n = 12 #discretizations
 vertices = []
 
 def gen_vertices(side):
+
     if side == "top":
         z = 2
     else:
@@ -21,22 +22,32 @@ gen_vertices("bottom")
 gen_vertices("top")
 
 faces = []
+normals = []
 
-def gen_faces(side): #start/end points of each side are key delimiters
-    if side == "bottom":
-        for i in range(2, 2+n):
-            faces.append((1, i, ((i-1)%n)+2))
-    elif side =="top":
-        for i in range(3+n, 3+n+n):
-            faces.append((2+n, i, ((i-2)%n)+n+3))
-    elif side == "sides":
-        for i in range(2, 2+n):
-            faces.append((i, i+n+1, ((i-1)%n)+n+3))
-            faces.append((i, ((i-1)%n)+n+3, ((i-1)%n)+2))
+def gen_faces_normals(): #start/end points of each side are key delimiters
+
+    #bottom
+    for i in range(2, 2+n):
+        a = 1
+        b = i
+        c = ((i-1)%n)+2
+        faces.append((a, b, c))
+    #top
+    for i in range(3+n, 3+n+n):
+        a = 2+n
+        b = i
+        c = ((i-2)%n)+n+3
+        faces.append((a, b, c))
+    #sides
+    for i in range(2, 2+n):
+        a = i
+        b = i+n+1
+        c = ((i-1)%n)+n+3
+        d = ((i-1)%n)+2
+        faces.append((a, b, c))
+        faces.append((a, c, d))
  
-gen_faces("bottom")
-gen_faces("top")
-gen_faces("sides")
+gen_faces_normals()
 
 objFile = open("cylinder.obj", "w")
 for v in vertices:
