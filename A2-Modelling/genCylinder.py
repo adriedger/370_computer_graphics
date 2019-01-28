@@ -90,12 +90,12 @@ objFile = open("cylinder_normals.obj", "w")
 for v in vertices:
     objFile.write("v ")
     for a in v:
-        objFile.write(format(a, ".2f") + " ") #output to a precision of 2
+        objFile.write(format(a, ".2f") + " ")
     objFile.write("\n")
 for vn in normals:
     objFile.write("vn ")
     for a in vn:
-        objFile.write(format(a, ".2f") + " ") #output to a precision of 2
+        objFile.write(format(a, ".2f") + " ")
     objFile.write("\n")
 for f in faces:
     objFile.write("f ")
