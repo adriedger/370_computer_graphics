@@ -1,11 +1,14 @@
 # Andre Driedger 1805536
 # Generates a cylinder obj file with radius 1 and height 2
+# 
+# vector normals same as position
 
 from math import *
 import numpy as np
 
 n = 12 #discretizations
 vertices = []
+normals = []
 
 def gen_vertices(side):
 
@@ -13,19 +16,20 @@ def gen_vertices(side):
         z = 2
     else:
         z = 0
-    vertices.append((0, 0, z)) #centerpoint
+    vertices.append((0, 0, z)) #centerpoints
+    normals.append((0, 0, z))
     dsc = (2*pi)/n 
     for i in range(0, n): #n divisions
         theta = dsc*i
         vertices.append((cos(theta), sin(theta), z))
+        normals.append((cos(theta), sin(theta), z))
 
 gen_vertices("bottom")
 gen_vertices("top")
 
 faces = []
-normals = []
 
-def gen_faces_normals(): #start/end points of each side are key delimiters
+def gen_faces(): #start/end points of each side are key delimiters
 
     #bottom
     for i in range(2, 2+n):
@@ -33,11 +37,6 @@ def gen_faces_normals(): #start/end points of each side are key delimiters
         b = i
         c = ((i-1)%n)+2
         faces.append((a, b, c))
-
-        U = np.array(vertices[b-1]) - np.array(vertices[a-1])
-        V = np.array(vertices[c-1]) - np.array(vertices[a-1])
-        N = np.cross(U, V)
-        normals.append(N)
     
     #top
     for i in range(3+n, 3+n+n):
@@ -45,11 +44,6 @@ def gen_faces_normals(): #start/end points of each side are key delimiters
         b = i
         c = ((i-2)%n)+n+3
         faces.append((a, b, c))
-
-        U = np.array(vertices[b-1]) - np.array(vertices[a-1])
-        V = np.array(vertices[c-1]) - np.array(vertices[a-1])
-        N = np.cross(U, V)
-        normals.append(N)
 
     #sides
     for i in range(2, 2+n):
@@ -59,19 +53,8 @@ def gen_faces_normals(): #start/end points of each side are key delimiters
         d = ((i-1)%n)+2
         faces.append((a, b, c))
         faces.append((a, c, d))
-
-        U = np.array(vertices[b-1]) - np.array(vertices[a-1])
-        V = np.array(vertices[c-1]) - np.array(vertices[a-1])
-        N = np.cross(U, V)
-        normals.append(N)
-
-        U = np.array(vertices[c-1]) - np.array(vertices[a-1])
-        V = np.array(vertices[d-1]) - np.array(vertices[a-1])
-        N = np.cross(U, V)
-        normals.append(N)
-
  
-gen_faces_normals()
+gen_faces()
 
 objFile = open("cylinder.obj", "w")
 for v in vertices:
