@@ -4,7 +4,6 @@
 # vector normals in a unit sphere are their position
 
 from math import *
-import numpy as np
 
 n = 32 #vertices along equator
 m = 16 #vertices pole to pole
@@ -86,7 +85,6 @@ for v in vertices:
     for a in v:
         objFile.write(format(a, ".2f") + " ") #output to a precision of 2
     objFile.write("\n")
-
 for f in faces:
     objFile.write("f ")
     for a in f:
@@ -99,13 +97,11 @@ for v in vertices:
     for a in v:
         objFile.write(format(a, ".4f") + " ")
     objFile.write("\n")
-
 for vn in normals:
     objFile.write("vn ")
     for a in vn:
         objFile.write(format(a, ".4f") + " ")
     objFile.write("\n")
-
 for f in faces:
     objFile.write("f ")
     for a in f:

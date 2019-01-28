@@ -4,7 +4,6 @@
 # vector normals same as position
 
 from math import *
-import numpy as np
 
 n = 12 #discretizations
 vertices = []
