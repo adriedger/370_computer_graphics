@@ -2,6 +2,7 @@
 # Generates a cylinder obj file with radius 1 and height 2
 
 from math import *
+import numpy as np
 
 n = 12 #discretizations
 vertices = []
@@ -32,12 +33,24 @@ def gen_faces_normals(): #start/end points of each side are key delimiters
         b = i
         c = ((i-1)%n)+2
         faces.append((a, b, c))
+
+        U = np.array(vertices[b-1]) - np.array(vertices[a-1])
+        V = np.array(vertices[c-1]) - np.array(vertices[a-1])
+        N = np.cross(U, V)
+        normals.append(N)
+    
     #top
     for i in range(3+n, 3+n+n):
         a = 2+n
         b = i
         c = ((i-2)%n)+n+3
         faces.append((a, b, c))
+
+        U = np.array(vertices[b-1]) - np.array(vertices[a-1])
+        V = np.array(vertices[c-1]) - np.array(vertices[a-1])
+        N = np.cross(U, V)
+        normals.append(N)
+
     #sides
     for i in range(2, 2+n):
         a = i
@@ -46,6 +59,17 @@ def gen_faces_normals(): #start/end points of each side are key delimiters
         d = ((i-1)%n)+2
         faces.append((a, b, c))
         faces.append((a, c, d))
+
+        U = np.array(vertices[b-1]) - np.array(vertices[a-1])
+        V = np.array(vertices[c-1]) - np.array(vertices[a-1])
+        N = np.cross(U, V)
+        normals.append(N)
+
+        U = np.array(vertices[c-1]) - np.array(vertices[a-1])
+        V = np.array(vertices[d-1]) - np.array(vertices[a-1])
+        N = np.cross(U, V)
+        normals.append(N)
+
  
 gen_faces_normals()
 
@@ -61,3 +85,22 @@ for f in faces:
         objFile.write(str(a) + " ")
     objFile.write("\n")
 
+
+objFile = open("cylinder_normals.obj", "w")
+for v in vertices:
+    objFile.write("v ")
+    for a in v:
+        objFile.write(format(a, ".2f") + " ") #output to a precision of 2
+    objFile.write("\n")
+for vn in normals:
+    objFile.write("vn ")
+    for a in vn:
+        objFile.write(format(a, ".2f") + " ") #output to a precision of 2
+    objFile.write("\n")
+for f in faces:
+    objFile.write("f ")
+    for a in f:
+        objFile.write(str(a) + '//' + str(a) + " ")
+    objFile.write("\n")
+
+   
