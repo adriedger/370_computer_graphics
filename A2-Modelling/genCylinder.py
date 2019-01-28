@@ -9,22 +9,26 @@ n = 12 #discretizations
 vertices = []
 normals = []
 
-def gen_vertices(side):
+def gen_vertices():
 
-    if side == "top":
-        z = 2
-    else:
-        z = 0
-    vertices.append((0, 0, z)) #centerpoints
-    normals.append((0, 0, z))
-    dsc = (2*pi)/n 
+    dsc = (2*pi)/n
+    #bottom
+    vertices.append((0, 0, 0)) #centerpoint
+    normals.append((0, 0, -1))    
     for i in range(0, n): #n divisions
         theta = dsc*i
-        vertices.append((cos(theta), sin(theta), z))
-        normals.append((cos(theta), sin(theta), z))
+        vertices.append((cos(theta), sin(theta), 0))
+        normals.append((cos(theta), sin(theta), 0))
 
-gen_vertices("bottom")
-gen_vertices("top")
+    #top
+    vertices.append((0, 0, 2))
+    normals.append((0, 0, 1)) 
+    for i in range(0, n):
+        theta = dsc*i
+        vertices.append((cos(theta), sin(theta), 2))
+        normals.append((cos(theta), sin(theta), 2))
+
+gen_vertices()
 
 faces = []
 
