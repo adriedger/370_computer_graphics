@@ -220,6 +220,73 @@ function raymarchInputTriangles(context, inputVertices) {
 
     function raymarch(ro, rd){
         // TODO: Your code here
+        // ro is the eye location
+        // rd is the 3d pixel 
+        let BA = vec3.fromValues(0, 0, 0);
+        let CA = vec3.fromValues(0, 0, 0);
+        
+        var norm_ro;
+        var D;
+        let n = vec3.fromValues(0, 0, 0);
+        var norm_n;
+        var d;
+        var t;
+        
+        var NE;
+        var ND;
+
+        let intersection_pt = vec3.fromValues(0, 0, 0);
+        let temp = vec3.fromValues(0, 0, 0);
+
+        var check
+         
+        vec3.nomalize(norm_ro, ro);                
+        vec3.sub(D, rd, norm_ro);
+        
+        vec3.nomalize(norm_n, n);                
+        
+        for (var i=0; i<n; i++) {
+        	var tn = inputVertices[i].triangles.length;
+        	//console.log("number of triangles in this files: " + tn);
+        	
+        	// Loop over the triangles, draw each in 2d
+        	for(var j=0; j<tn; j++){
+
+        		var vertex1 = inputVertices[j].triangles[i][0];
+        		var vertex2 = inputVertices[j].triangles[i][1];
+        		var vertex3 = inputVertices[j].triangles[i][2];
+
+        		var vertexPos1 = inputVertices[j].vertices[vertex1];
+        		var vertexPos2 = inputVertices[j].vertices[vertex2];
+        		var vertexPos3 = inputVertices[j].vertices[vertex3];
+                                
+        		vec3.sub(BA, vertexPos2, vertexPos1);
+        		vec3.sub(CA, vertexPos3, vertexPos1);
+
+            	vec3.cross(n, BA, CA);
+
+                d = vec3.dot(n, vertexPos1);
+
+                NE = vec3.dot(norm_n, norm_ro);
+                ND = vec3.dot(norm_n, D);
+                
+                t = (d-NE)/ND;
+                    
+                vec3.scale(temp, D, t);
+                vec3.add(intersection_pt, temp, norm_ro);
+                
+                if(checkIntersect(norm_n, intersection_pt, vertexPos1, vertexPos2)=\\
+                   checkIntersect(norm_n, intersection_pt, vertexPos2, vertexPos3)=\\
+                   checkIntersect(norm_n, intersection_pt, vertexPos3, vertexPos1)) {
+                    //follow up with color
+                }
+                else {
+                    //returns white pixel
+                    return vec3.fromValues(1.0, 1.0, 1.0);        
+                }
+
+        	} // end for triangles
+        
         
         return vec3.fromValues(0.0, 0.0, 0.0);        
     }
@@ -236,6 +303,28 @@ function raymarchInputTriangles(context, inputVertices) {
     }
 
     context.putImageData(imagedata, 0, 0);
+}
+
+function checkIntersect(norm_n, intersection_pt, V1, V2) {
+    let Vdiff = vec3.fromValues(0, 0, 0);
+    let Idiff = vec3.fromValues(0, 0, 0);
+    let cross = vec3.fromValues(0, 0, 0);
+    var dot;
+
+    vec3.sub(Vdiff, V2, V1);
+    vec3.sub(Idiff, I, V1);
+    vec3.cross(cross, Idiff, Vdiff);
+
+    dot = vec3.dot(norm_n, cross);
+
+    if(dot > 0) {
+        return true;
+    }
+    else if(dot < 0) { 
+        return true;
+    }
+
+    console.log(dot);
 }
 
 
