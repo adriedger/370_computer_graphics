@@ -238,7 +238,7 @@ function raymarchInputTriangles(context, inputVertices) {
         let intersection_pt = vec3.fromValues(0, 0, 0);
         let temp = vec3.fromValues(0, 0, 0);
 
-        var check
+        var check;
          
         vec3.nomalize(norm_ro, ro);                
         vec3.sub(D, rd, norm_ro);
