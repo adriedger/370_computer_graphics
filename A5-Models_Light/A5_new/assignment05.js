@@ -75,7 +75,13 @@ function doDrawing(gl, canvas,inputTriangles) {
                 },
                 programInfo: lightingShader(gl),
                 buffers: undefined,
-                // TODO: Add more object specific state
+                // XXX: Add more object specific state
+                color: {
+                    ambient: inputTriangles[i].materials.ambient,
+                    diffuse: inputTriangles[i].materials.diffuse,
+                    specular: inputTriangles[i].materials.specular,
+                    n: inputTriangels[i].materials.n,
+                }
             }
         );
         initBuffers(gl, state.objects[i], inputTriangles[i].vertices.flat(), inputTriangles[i].normals.flat(), inputTriangles[i].triangles.flat());
@@ -181,7 +187,11 @@ function drawScene(gl, deltaTime, state) {
             gl.uniform3fv(object.programInfo.uniformLocations.light0Colour, state.lights[0].colour);
             gl.uniform1f(object.programInfo.uniformLocations.light0Strength, state.lights[0].strength);
 
-            // TODO: Add uniform updates here
+            // XXX: Add uniform updates here
+            gl.uniform3fv(object.programInfo.uniformLocations.colorAmbient, object.color.ambient);
+            gl.uniform3fv(object.programInfo.uniformLocations.colorDiffuse, object.color.diffuse);
+            gl.uniform3fv(object.programInfo.uniformLocations.colorSpecular, object.color.specular);
+            gl.uniform1f(object.programInfo.uniformLocations.n, object.color.n);
         }
 
         // Draw 
@@ -287,7 +297,7 @@ function setupKeypresses(state){
  * SHADER SETUP
  ************************************/
 function lightingShader(gl){
-// Vertex shader source code
+    // Vertex shader source code
     const vsSource =
     `#version 300 es
     in vec3 aPosition;
@@ -372,7 +382,11 @@ function lightingShader(gl){
             light0Position: gl.getUniformLocation(shaderProgram, 'uLight0Position'),
             light0Colour: gl.getUniformLocation(shaderProgram, 'uLight0Colour'),
             light0Strength: gl.getUniformLocation(shaderProgram, 'uLight0Strength'),
-            // TODO: Add additional uniforms here
+            // XXX: Add additional uniforms here
+            colorAmbient: gl.getUniformLocation(shaderProgram, 'uAmb'),
+            colorDiffuse: gl.getUniformLocation(shaderProgram, 'uDiff'),
+            colorSpecular: gl.getUniformLocation(shaderProgram, 'uSpec'),
+            n: gl.getUniformLocation(shaderProgram, 'n'),
         },
     };
 
