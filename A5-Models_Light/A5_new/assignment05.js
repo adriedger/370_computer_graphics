@@ -77,10 +77,10 @@ function doDrawing(gl, canvas,inputTriangles) {
                 buffers: undefined,
                 // XXX: Add more object specific state
                 color: {
-                    ambient: inputTriangles[i].materials.ambient,
-                    diffuse: inputTriangles[i].materials.diffuse,
-                    specular: inputTriangles[i].materials.specular,
-                    n: inputTriangels[i].materials.n,
+                    ambient: inputTriangles[i].material.ambient,
+                    diffuse: inputTriangles[i].material.diffuse,
+                    specular: inputTriangles[i].material.specular,
+                    n: inputTriangles[i].material.n,
                 }
             }
         );
@@ -222,7 +222,7 @@ function setupKeypresses(state){
         case "KeyA":
             if (event.getModifierState("Shift")) {
                 // TODO: Rotate camera about Y axis
-                mat4.rotateY(state.camera.rotation, state.model.rotation, 0.1);
+                mat4.rotateY(state.camera.up, state.camera.up, 0.1);
             } else {
                 // TODO: Move camera along X axis
                 vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.1, 0.0, 0.0));
@@ -338,6 +338,11 @@ function lightingShader(gl){
     uniform vec3 uLight0Position;
     uniform vec3 uLight0Colour;
     uniform float uLight0Strength;
+    
+    uniform vec3 uAmb;
+    uniform vec3 uDiff;
+    uniform vec3 uSpec;
+    uniform float n;
 
     void main() {
         // Get the dirction of the light relative to the object
@@ -347,15 +352,24 @@ function lightingShader(gl){
         // Make use of the uniform light variables
         // To get colours from the materials of the objects, you will need to create your own uniforms
 
+        vec3 L = normalize(uLight0Position - oFragPosition);
+        float NdotL = dot(normalize(oNormal), L);
+        
+        vec3 H = normalize(L + normalize(oFragPosition - oCameraPosition));
+        float HdotN = dot(H, normalize(oNormal));
+        
         // Diffuse lighting
-        vec3 diffuse = vec3(0.0, 0.0, 0.0);
-        vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
+        //vec3 diffuse = vec3(0.0, 0.0, 0.0);
+        //vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
 
+        vec3 diffuse = vec3(0.8, 0.8, 0.8);
+        vec3 diffuseColor =  uDiff * NdotL;
+        
         // Specular lighting
-        vec3 specular = vec3(0.0, 0.0, 0.0);
-        vec3 specularColor = vec3(1.0, 1.0, 1.0);
+        vec3 specular = vec3(0.4, 0.4, 0.4);
+        vec3 specularColor = uSpec * pow(HdotN, n);
 
-        vec3 ambientColor = vec3(0.0, 0.0, 0.0);
+        vec3 ambientColor = uAmb * 0.2;
 
         fragColor = vec4(( specular * specularColor + diffuse * diffuseColor + ambientColor), 1.0);
     }
