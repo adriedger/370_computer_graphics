@@ -222,7 +222,9 @@ function setupKeypresses(state){
         case "KeyA":
             if (event.getModifierState("Shift")) {
                 // TODO: Rotate camera about Y axis
-                mat4.rotateY(state.camera.up, state.camera.up, 0.1);
+                //vec3.rotateY(state.camera.up, state.camera.up, vec3.fromValues(0, 0, 0,), 3.14);
+				//console.log(state.camera.up);
+				//mat4.rotateY()
             } else {
                 // TODO: Move camera along X axis
                 vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.1, 0.0, 0.0));
@@ -243,7 +245,7 @@ function setupKeypresses(state){
                 //mat4.rotateX(state.model.rotation, state.model.rotation, 0.1);
             } else {
                 // TODO: Move camera along Z axis
-                vec3.add(state.model.position, state.model.position, vec3.fromValues(0.0, 0.0, 0.1));
+                vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.0, 0.1));
             }
             break;
         case "KeyS":
@@ -252,16 +254,16 @@ function setupKeypresses(state){
                 //mat4.rotateX(state.model.rotation, state.model.rotation, -0.1);
             } else {
                 // TODO: Move camera along Z axis
-                vec3.add(state.model.position, state.model.position, vec3.fromValues(0.0, 0.0, -0.1));
+                vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.0, -0.1));
             }
             break;
         case "KeyQ":
                 // TODO: Move camera along Y axis
-                vec3.add(state.model.position, state.model.position, vec3.fromValues(0.0, 0.1, 0.0));
+                vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.0, 0.1, 0.0));
             break;
         case "KeyE":
                 // TODO: Move camera along Y axis
-                vec3.add(state.model.position, state.model.position, vec3.fromValues(0.0, -0.1, 0.0));
+                vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.0, -0.1, 0.0));
             break;
         case "Space":
             // TODO: Highlight
