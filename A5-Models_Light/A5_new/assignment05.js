@@ -329,55 +329,72 @@ function setupKeypresses(state){
 			break;
 		
 		case "KeyK":
-            if (event.getModifierState("Shift")) {
-                // TODO: Rotate selected object about Y axis
-				mat4.rotateY(object.model.rotation, object.model.rotation, 0.3);
-            } else {
-                // TODO: Translate selected object about X axis
-				
-            }
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: Rotate selected object about Y axis
+					mat4.rotateY(object.model.rotation, object.model.rotation, 0.3);
+				} else {
+					// TODO: Translate selected object about X axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.1, 0.0 , 0.0));
+				}
+			}
             break;
         case "Semicolon":
-            if (event.getModifierState("Shift")) {
-                // TODO: Rotate selected object about Y axis
-				mat4.rotateY(object.model.rotation, object.model.rotation, -0.3);
-            } else {
-                // TODO: Translate selected object about X axis
-				
-            }
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: Rotate selected object about Y axis
+					mat4.rotateY(object.model.rotation, object.model.rotation, -0.3);
+				} else {
+					// TODO: Translate selected object about X axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(-0.1, 0.0 , 0.0));
+				}
+			}
             break;
 		case "KeyO":
-            if (event.getModifierState("Shift")) {
-                // TODO: rotate selection forward and backward around view X (pitch)
-				mat4.rotateX(object.model.rotation, object.model.rotation, 0.3);
-            } else {
-				
-            }
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection around view X (pitch)
+					mat4.rotateX(object.model.rotation, object.model.rotation, 0.3);
+				} else {
+					// translate selection along Z axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, 0.0 , 0.1));
+				}
+			}
             break;
 		case "KeyL":
-            if (event.getModifierState("Shift")) {
-                // TODO: rotate selection forward and backward around view X (pitch)
-				mat4.rotateX(object.model.rotation, object.model.rotation, -0.3);
-            } else {
-				
-            }
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection around view X (pitch)
+					mat4.rotateX(object.model.rotation, object.model.rotation, -0.3);
+				} else {
+					// translate selection along Z axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, 0.0 , -0.1));
+				}
+			}
             break;
 		case "KeyI":
-            if (event.getModifierState("Shift")) {
-                // TODO: rotate selection forward and backward around view X (pitch)
-				mat4.rotateZ(object.model.rotation, object.model.rotation, 0.3);
-            } else {
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection forward and backward around view X (pitch)
+					mat4.rotateZ(object.model.rotation, object.model.rotation, 0.3);
+				} else {
+					// translate selection up and down along view Y
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, 0.1 , 0.0));
 				
-            }
+				}
+			}
             break;
 		case "KeyP":
-            if (event.getModifierState("Shift")) {
-                // TODO: rotate selection forward and backward around view X (pitch)
-				mat4.rotateZ(object.model.rotation, object.model.rotation, -0.3);
-            } else {
-				
-            }
-            break;			
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection forward and backward around view X (pitch)
+					mat4.rotateZ(object.model.rotation, object.model.rotation, -0.3);
+				} else {
+					// translate selection up and down along view Y
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, -0.1, 0.0));
+				}
+			}
+			break;			
 			
         default:
 			
