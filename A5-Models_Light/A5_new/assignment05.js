@@ -75,13 +75,16 @@ function doDrawing(gl, canvas,inputTriangles) {
                 },
                 programInfo: lightingShader(gl),
                 buffers: undefined,
-                // XXX: Add more object specific state
-                color: {
-                    ambient: inputTriangles[i].material.ambient,
-                    diffuse: inputTriangles[i].material.diffuse,
-                    specular: inputTriangles[i].material.specular,
-                    n: inputTriangles[i].material.n,
-                }
+				
+				// *** TODO: Add more object specific state
+				color: {
+					ambient: inputTriangles[i].material.ambient,
+					diffuse: inputTriangles[i].material.diffuse,
+					specular: inputTriangles[i].material.specular,
+					n: inputTriangles[i].material.n,
+				}
+                
+				
             }
         );
         initBuffers(gl, state.objects[i], inputTriangles[i].vertices.flat(), inputTriangles[i].normals.flat(), inputTriangles[i].triangles.flat());
@@ -187,11 +190,12 @@ function drawScene(gl, deltaTime, state) {
             gl.uniform3fv(object.programInfo.uniformLocations.light0Colour, state.lights[0].colour);
             gl.uniform1f(object.programInfo.uniformLocations.light0Strength, state.lights[0].strength);
 
-            // XXX: Add uniform updates here
-            gl.uniform3fv(object.programInfo.uniformLocations.colorAmbient, object.color.ambient);
+            // *** TODO: Add uniform updates here
+			gl.uniform3fv(object.programInfo.uniformLocations.colorAmbient, object.color.ambient);
             gl.uniform3fv(object.programInfo.uniformLocations.colorDiffuse, object.color.diffuse);
-            gl.uniform3fv(object.programInfo.uniformLocations.colorSpecular, object.color.specular);
+			gl.uniform3fv(object.programInfo.uniformLocations.colorSpecular, object.color.specular);
             gl.uniform1f(object.programInfo.uniformLocations.n, object.color.n);
+			
         }
 
         // Draw 
@@ -213,6 +217,8 @@ function drawScene(gl, deltaTime, state) {
  ************************************/
 
 function setupKeypresses(state){
+	var highlight = false;
+
     document.addEventListener("keydown", (event) => {
         console.log(event.code);
 
@@ -222,74 +228,176 @@ function setupKeypresses(state){
         case "KeyA":
             if (event.getModifierState("Shift")) {
                 // TODO: Rotate camera about Y axis
-                //vec3.rotateY(state.camera.up, state.camera.up, vec3.fromValues(0, 0, 0,), 3.14);
-				//console.log(state.camera.up);
-				//mat4.rotateY()
+				vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.1, 0.0, 0.0));
             } else {
                 // TODO: Move camera along X axis
                 vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.1, 0.0, 0.0));
+				vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.1, 0.0, 0.0));
             }
             break;
         case "KeyD":
             if (event.getModifierState("Shift")) {
                 // TODO: Rotate camera about Y axis
-                //mat4.rotateY(state.model.rotation, state.model.rotation, -0.1);
+				vec3.add(state.camera.center, state.camera.center, vec3.fromValues(-0.1, 0.0, 0.0));
             } else {
                 // TODO: Move camera along X axis
                 vec3.add(state.camera.center, state.camera.center, vec3.fromValues(-0.1, 0.0, 0.0));
+				vec3.add(state.camera.position, state.camera.position, vec3.fromValues(-0.1, 0.0, 0.0));
             }
             break;
         case "KeyW":
             if (event.getModifierState("Shift")) {
                 // TODO: Rotate camera about X axis
-                //mat4.rotateX(state.model.rotation, state.model.rotation, 0.1);
+				vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.0, 0.1, 0.0));
             } else {
                 // TODO: Move camera along Z axis
-                vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.0, 0.1));
+				vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.0, 0.1));
             }
             break;
         case "KeyS":
             if (event.getModifierState("Shift")) {
                 // TODO: Rotate camera about X axis
-                //mat4.rotateX(state.model.rotation, state.model.rotation, -0.1);
+				vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.0, -0.1, 0.0));
             } else {
                 // TODO: Move camera along Z axis
-                vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.0, -0.1));
+				vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.0, -0.1));
             }
             break;
         case "KeyQ":
                 // TODO: Move camera along Y axis
                 vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.0, 0.1, 0.0));
+				vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, 0.1, 0.0));
             break;
         case "KeyE":
                 // TODO: Move camera along Y axis
                 vec3.add(state.camera.center, state.camera.center, vec3.fromValues(0.0, -0.1, 0.0));
+				vec3.add(state.camera.position, state.camera.position, vec3.fromValues(0.0, -0.1, 0.0));
             break;
         case "Space":
             // TODO: Highlight
+			if (highlight){
+				vec3.add(object.model.scale, object.model.scale, vec3.fromValues(-0.2, -0.2, -0.2));
+				highlight = false;
+			}
+			else {
+				//object = state.objects[state.selectedIndex];
+				vec3.add(object.model.scale, object.model.scale, vec3.fromValues(0.2, 0.2, 0.2));
+				highlight = true;
+			}
             break;
         case "ArrowLeft":
             // TODO: Cycle selected object
+			if (highlight){
+				vec3.add(object.model.scale, object.model.scale, vec3.fromValues(-0.2, -0.2, -0.2));
+				state.selectedIndex = (state.selectedIndex - 1 + state.objects.length ) % 3;
+				object = state.objects[state.selectedIndex];
+				vec3.add(object.model.scale, object.model.scale, vec3.fromValues(0.2, 0.2, 0.2));
+			}
             break;
         case "ArrowRight":
             // TODO: Cycle selected object
+			if (highlight){
+				vec3.add(object.model.scale, object.model.scale, vec3.fromValues(-0.2, -0.2, -0.2));
+				state.selectedIndex = (state.selectedIndex + 1) % 3;
+				object = state.objects[state.selectedIndex];
+				vec3.add(object.model.scale, object.model.scale, vec3.fromValues(0.2, 0.2, 0.2));
+			}
             break;
-        case "KeyK":
-            if (event.getModifierState("Shift")) {
-                // TODO: Rotate selected object about Y axis
-            } else {
-                // TODO: Translate selected object about X axis
-            }
+
+
+        // TODO: Add additional keypress actions
+		case "KeyN":
+			object.color.n = (object.color.n + 1) % 20;
+			break;
+		case "Digit1":
+			vec3.add(object.color.ambient, object.color.ambient, vec3.fromValues(0.1, 0.1, 0.1));
+			if (object.color.ambient[0] >= 1.0) {
+				vec3.add(object.color.ambient, object.color.ambient, vec3.fromValues(-1.0, -1.0, -1.0));
+			}
+			break;
+		case "Digit2":
+			vec3.add(object.color.diffuse, object.color.diffuse, vec3.fromValues(0.1, 0.1, 0.1));
+			if (object.color.diffuse[0] >= 1.0) {
+				vec3.add(object.color.diffuse, object.color.diffuse, vec3.fromValues(-1.0, -1.0, -1.0));
+			}
+			break;
+		case "Digit3":
+			vec3.add(object.color.specular, object.color.specular, vec3.fromValues(0.1, 0.1, 0.1));
+			if (object.color.specular[0] >= 1.0) {
+				vec3.add(object.color.specular, object.color.specular, vec3.fromValues(-1.0, -1.0, -1.0));
+			}
+			break;
+		
+		case "KeyK":
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: Rotate selected object about Y axis
+					mat4.rotateY(object.model.rotation, object.model.rotation, 0.3);
+				} else {
+					// TODO: Translate selected object about X axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.1, 0.0 , 0.0));
+				}
+			}
             break;
         case "Semicolon":
-            if (event.getModifierState("Shift")) {
-                // TODO: Rotate selected object about Y axis
-            } else {
-                // TODO: Translate selected object about X axis
-            }
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: Rotate selected object about Y axis
+					mat4.rotateY(object.model.rotation, object.model.rotation, -0.3);
+				} else {
+					// TODO: Translate selected object about X axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(-0.1, 0.0 , 0.0));
+				}
+			}
             break;
-        // TODO: Add additional keypress actions
+		case "KeyO":
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection around view X (pitch)
+					mat4.rotateX(object.model.rotation, object.model.rotation, 0.3);
+				} else {
+					// translate selection along Z axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, 0.0 , 0.1));
+				}
+			}
+            break;
+		case "KeyL":
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection around view X (pitch)
+					mat4.rotateX(object.model.rotation, object.model.rotation, -0.3);
+				} else {
+					// translate selection along Z axis
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, 0.0 , -0.1));
+				}
+			}
+            break;
+		case "KeyI":
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection forward and backward around view X (pitch)
+					mat4.rotateZ(object.model.rotation, object.model.rotation, 0.3);
+				} else {
+					// translate selection up and down along view Y
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, 0.1 , 0.0));
+				
+				}
+			}
+            break;
+		case "KeyP":
+			if (highlight){
+				if (event.getModifierState("Shift")) {
+					// TODO: rotate selection forward and backward around view X (pitch)
+					mat4.rotateZ(object.model.rotation, object.model.rotation, -0.3);
+				} else {
+					// translate selection up and down along view Y
+					vec3.add(object.model.position, object.model.position, vec3.fromValues(0.0, -0.1, 0.0));
+				}
+			}
+			break;			
+			
         default:
+			
             break;
         }
     });
@@ -299,7 +407,7 @@ function setupKeypresses(state){
  * SHADER SETUP
  ************************************/
 function lightingShader(gl){
-    // Vertex shader source code
+// Vertex shader source code
     const vsSource =
     `#version 300 es
     in vec3 aPosition;
@@ -322,7 +430,7 @@ function lightingShader(gl){
         // Postion of the fragment in world space
         oFragPosition = (uModelMatrix * vec4(aPosition, 1.0)).xyz;
 
-        oNormal = normalize((uModelMatrix * vec4(aNormal, 1.0)).xyz);
+        oNormal = normalize((uModelMatrix * vec4(aNormal, 0.0)).xyz);
         oCameraPosition = uCameraPosition;
     }
     `;
@@ -340,11 +448,11 @@ function lightingShader(gl){
     uniform vec3 uLight0Position;
     uniform vec3 uLight0Colour;
     uniform float uLight0Strength;
-    
-    uniform vec3 uAmb;
-    uniform vec3 uDiff;
-    uniform vec3 uSpec;
-    uniform float n;
+	
+	uniform vec3 uAmb;
+	uniform vec3 uDiff;
+	uniform vec3 uSpec;
+	uniform float n;
 
     void main() {
         // Get the dirction of the light relative to the object
@@ -354,19 +462,19 @@ function lightingShader(gl){
         // Make use of the uniform light variables
         // To get colours from the materials of the objects, you will need to create your own uniforms
 
-        vec3 L = normalize(uLight0Position - oFragPosition);
-        float NdotL = dot(normalize(oNormal), L);
-        
-        vec3 H = normalize(L + normalize(oFragPosition - oCameraPosition));
-        float HdotN = dot(H, normalize(oNormal));
-        
+		vec3 L = normalize(uLight0Position - oFragPosition);
+		float NdotL = dot(normalize(oNormal), L);
+		
+		vec3 H = normalize(L + normalize(oFragPosition - oCameraPosition));
+		float HdotN = dot(H, normalize(oNormal));
+		
         // Diffuse lighting
         //vec3 diffuse = vec3(0.0, 0.0, 0.0);
         //vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
 
-        vec3 diffuse = vec3(0.8, 0.8, 0.8);
+		vec3 diffuse = vec3(0.8, 0.8, 0.8);
         vec3 diffuseColor =  uDiff * NdotL;
-        
+		
         // Specular lighting
         vec3 specular = vec3(0.4, 0.4, 0.4);
         vec3 specularColor = uSpec * pow(HdotN, n);
@@ -398,11 +506,12 @@ function lightingShader(gl){
             light0Position: gl.getUniformLocation(shaderProgram, 'uLight0Position'),
             light0Colour: gl.getUniformLocation(shaderProgram, 'uLight0Colour'),
             light0Strength: gl.getUniformLocation(shaderProgram, 'uLight0Strength'),
-            // XXX: Add additional uniforms here
-            colorAmbient: gl.getUniformLocation(shaderProgram, 'uAmb'),
-            colorDiffuse: gl.getUniformLocation(shaderProgram, 'uDiff'),
-            colorSpecular: gl.getUniformLocation(shaderProgram, 'uSpec'),
-            n: gl.getUniformLocation(shaderProgram, 'n'),
+            
+			// *** TODO: Add additional uniforms here
+			colorAmbient: gl.getUniformLocation(shaderProgram, 'uAmb'),
+			colorDiffuse: gl.getUniformLocation(shaderProgram, 'uDiff'),
+			colorSpecular: gl.getUniformLocation(shaderProgram, 'uSpec'),
+			n: gl.getUniformLocation(shaderProgram, 'n'),
         },
     };
 
